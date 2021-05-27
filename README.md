@@ -9,11 +9,17 @@ No support will be provided.
 
 My device configuration
 
-### mouse
+### Left hand device
+
+Nintendo Joy-Con(L)
+
+### Mouse
 
 Logicool G304
 
 ## Requirement
+
+[JoyToKey](https://joytokey.net/)
 
 [Crevice4](https://www.microsoft.com/ja-jp/p/crevice-4/9nzxvrj73xj0)
 
