@@ -9,7 +9,7 @@ setting = {
 	},
 	arg3 = {
 		"p",
-		"5",
+		"4",
 	},
 	arg5 = {
 		"c",
@@ -78,6 +78,7 @@ function PressReleaseKeyByFlg(key)
 	end
 end
 
+-- TODO.This function is It's not working properly.
 function RapidFireKeyByFlg(arg, key, time)
 	local ch = key
 	if IsNumber(key) then
