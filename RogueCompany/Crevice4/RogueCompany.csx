@@ -17,18 +17,20 @@ var RogueCompany = When(ctx =>
     return ctx.ForegroundWindow.ModuleName == "RogueCompany.exe";
 });
 
-RogueCompany.
-On(Keys.XButton1).
+var RogueCompanyShift = RogueCompany.On(Keys.XButton1);
+
+RogueCompanyShift.
 On(Keys.WheelUp).
 Do(ctx => {
-    SendInput.KeyDown(Keys.D5);
-    SendInput.KeyUp(Keys.D5);
+    var key = Keys.D5;
+    SendInput.KeyDown(key);
+    SendInput.KeyUp(key);
 });
 
-RogueCompany.
-On(Keys.XButton1).
+RogueCompanyShift.
 On(Keys.WheelDown).
 Do(ctx => {
-    SendInput.KeyDown(Keys.D5);
-    SendInput.KeyUp(Keys.D5);
+    var key = Keys.D5;
+    SendInput.KeyDown(key);
+    SendInput.KeyUp(key);
 });
