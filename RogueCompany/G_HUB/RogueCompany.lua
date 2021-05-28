@@ -1,3 +1,9 @@
+EnablePrimaryMouseButtonEvents(true)
+
+function IsNumber(value)
+	return nil ~= tonumber(value);
+end
+
 setting = {
 	arg1 = {
 		"mouse1",
@@ -22,12 +28,15 @@ setting = {
 }
 
 shifting = false
+
 pk = {}
-
-EnablePrimaryMouseButtonEvents(true)
-
-function IsNumber(value)
-	return nil ~= tonumber(value);
+for key, btns in pairs(setting) do
+	for i, btn in pairs(btns) do
+		if IsNumber(btn) then
+			btn = "_" .. btn
+		end
+		pk[btn] = false
+	end
 end
 
 function IsMouseButtonReleaseOrSleep(arg, time)
@@ -47,12 +56,22 @@ function ManageFlg(pressed, key, conditionsShift)
 	if IsNumber(key) then
 		key = "_" .. key
 	end
+	local flg = nil
 	if pressed then
 		if conditionsShift == shifting then
-			pk[key] = pressed
+			flg = pressed
 		end
 	else
-		pk[key] = pressed
+		flg = pressed
+	end
+	if nil == flg then
+		return false
+	end
+	if flg ~= pk[key] then
+		pk[key] = flg
+		return true
+	else
+		return false
 	end
 end
 
@@ -60,8 +79,10 @@ function PressReleaseMouseButtonByFlg(button)
 	local noStr = string.gsub(button, "mouse", "")
 	local no = tonumber(noStr)
 	if pk[button] then
+		OutputLogMessage("PressMouseButton: "..no.."\n")
 		PressMouseButton(no)
 	else
+		OutputLogMessage("ReleaseMouseButton: "..no.."\n")
 		ReleaseMouseButton(no)
 	end
 end
@@ -72,8 +93,10 @@ function PressReleaseKeyByFlg(key)
 		key = "_" .. key
 	end
 	if pk[key] then
+		OutputLogMessage("PressKey: "..ch.."\n")
 		PressKey(ch)
 	else
+		OutputLogMessage("ReleaseKey: "..ch.."\n")
 		ReleaseKey(ch)
 	end
 end
@@ -88,6 +111,7 @@ function RapidFireKeyByFlg(arg, key, time)
 		return
 	end
 	repeat
+		OutputLogMessage("PressAndReleaseKey: "..ch.."\n")
 		PressAndReleaseKey(ch)
 	until IsMouseButtonReleaseOrSleep(arg, time)
 end
@@ -100,7 +124,6 @@ function OnEvent(event, arg)
 	local pressed = "MOUSE_BUTTON_PRESSED" == event
 	if 4 == arg then
 		shifting = pressed
-		return
 	end
 	for key, btns in pairs(setting) do
 		local no_str = string.gsub(key, "arg", "")
@@ -112,7 +135,9 @@ function OnEvent(event, arg)
 			if nil == btn then
 				goto continue
 			end
-			ManageFlg(pressed, btn, 1 ~= i)
+			if not ManageFlg(pressed, btn, 1 ~= i) then
+				goto continue
+			end
 			if nil == string.match(btn, "mouse") then
 				PressReleaseKeyByFlg(btn)
 			else
