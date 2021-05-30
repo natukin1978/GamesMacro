@@ -18,7 +18,7 @@ setting = {
 		"4",
 	},
 	arg5 = {
-		"c",
+		"lctrl",
 		"g",
 	},
 	arg6 = {
