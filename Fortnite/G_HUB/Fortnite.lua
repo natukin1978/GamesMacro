@@ -16,8 +16,6 @@ setting = {
 	},
 }
 
-shifting = false
-
 pk = {}
 for key, btns in pairs(setting) do
 	for i, btn in pairs(btns) do
@@ -32,19 +30,8 @@ function ManageFlg(pressed, key, conditionsShift)
 	if IsNumber(key) then
 		key = "_" .. key
 	end
-	local flg = nil
-	if pressed then
-		if conditionsShift == shifting then
-			flg = pressed
-		end
-	else
-		flg = pressed
-	end
-	if nil == flg then
-		return false
-	end
-	if flg ~= pk[key] then
-		pk[key] = flg
+	if pressed ~= pk[key] then
+		pk[key] = pressed
 		return true
 	else
 		return false
@@ -124,9 +111,6 @@ function OnEvent(event, arg)
 		return
 	end
 	local pressed = "MOUSE_BUTTON_PRESSED" == event
-	--if 4 == arg then
-	--	shifting = pressed
-	--end
 	if pressed then
 		PrePress(arg)
 	end
