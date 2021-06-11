@@ -1,8 +1,9 @@
 EnablePrimaryMouseButtonEvents(false)
 
-function IsNumber(value)
-	return nil ~= tonumber(value);
-end
+keyWall  = "z"
+keySteps = "c"
+keyQuick = "q"
+keyEdit  = "n"
 
 setting = {
 	arg4 = {
@@ -15,6 +16,10 @@ setting = {
 		"mouse1",
 	},
 }
+
+function IsNumber(value)
+	return nil ~= tonumber(value);
+end
 
 pk = {}
 for key, btns in pairs(setting) do
@@ -67,15 +72,15 @@ end
 function PrePress(arg)
 	local switchCases = {}
 	switchCases[4] = function()
-		pk["z"] = true
-		PressAndReleaseKey("z")
+		pk[keyWall] = true
+		PressAndReleaseKey(keyWall)
 	end
 	switchCases[5] = function()
-		pk["c"] = true
-		PressAndReleaseKey("c")
+		pk[keySteps] = true
+		PressAndReleaseKey(keySteps)
 	end
 	switchCases[6] = function()
-		PressAndReleaseKey("n")
+		PressAndReleaseKey(keyEdit)
 		Sleep(15)
 		PressAndReleaseMouseButton(3)
 		Sleep(15)
@@ -90,18 +95,18 @@ end
 function Released(arg)
 	local switchCases = {}
 	switchCases[4] = function()
-		pk["z"] = false
+		pk[keyWall] = false
 	end
 	switchCases[5] = function()
-		pk["c"] = false
+		pk[keySteps] = false
 	end
 	local switchCase = switchCases[arg]
 	if not switchCase then
 		return
 	end
 	switchCase()
-	if not(pk["z"] or pk["c"]) then
-		PressAndReleaseKey("q")
+	if not(pk[keyWall] or pk[keySteps]) then
+		PressAndReleaseKey(keyQuick)
 	end
 end
 
