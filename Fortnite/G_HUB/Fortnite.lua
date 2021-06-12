@@ -1,4 +1,4 @@
-EnablePrimaryMouseButtonEvents(false)
+nablePrimaryMouseButtonEvents(false)
 
 keyWall  = "z"
 keySteps = "c"
@@ -6,6 +6,9 @@ keyQuick = "q"
 keyEdit  = "n"
 
 setting = {
+	arg3 = {
+		keyQuick,
+	},
 	arg4 = {
 		"mouse1",
 	},

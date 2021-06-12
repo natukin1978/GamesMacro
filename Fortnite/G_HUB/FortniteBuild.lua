@@ -14,6 +14,9 @@ setting = {
 	arg2 = {
 		"mouse1",
 	},
+	arg3 = {
+		keyQuick,
+	},
 	arg4 = {
 		"mouse1",
 	},
