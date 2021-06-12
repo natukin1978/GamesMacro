@@ -5,7 +5,7 @@ keyRoof  = "v"
 keyWall  = "z"
 keySteps = "c"
 keyQuick = "q"
-keyEdit  = "n"
+keyEdit  = "g"
 
 setting = {
 	arg1 = {
