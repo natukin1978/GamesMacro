@@ -5,18 +5,24 @@ keySteps = "c"
 keyQuick = "q"
 keyEdit  = "g"
 
+keyPin   = "p"
+
 setting = {
 	arg3 = {
 		keyQuick,
+		nil,
 	},
 	arg4 = {
 		"mouse1",
+		nil,
 	},
 	arg5 = {
 		"mouse1",
+		nil,
 	},
 	arg6 = {
 		"mouse1",
+		keyPin,
 	},
 }
 
@@ -86,6 +92,9 @@ function PressReleaseKeyByFlg(key)
 end
 
 function PrePress(arg)
+	if shifting then
+		return
+	end
 	local switchCases = {}
 	switchCases[4] = function()
 		pk[keyWall] = true
@@ -109,6 +118,9 @@ function PrePress(arg)
 end
 
 function Released(arg)
+	if shifting then
+		return
+	end
 	local switchCases = {}
 	switchCases[4] = function()
 		pk[keyWall] = false
@@ -132,7 +144,7 @@ function OnEvent(event, arg)
 		return
 	end
 	local pressed = "MOUSE_BUTTON_PRESSED" == event
-	shifting = IsModifierPressed("lctrl")
+	shifting = IsModifierPressed("lshift")
 	if pressed then
 		PrePress(arg)
 	end
