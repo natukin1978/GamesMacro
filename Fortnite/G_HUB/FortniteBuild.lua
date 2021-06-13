@@ -7,24 +7,35 @@ keySteps = "c"
 keyQuick = "q"
 keyEdit  = "g"
 
+keyTrap  = "y"
+keyCM    = "mouse3"
+keyRo    = "r"
+keyRe    = "h"
+
 setting = {
 	arg1 = {
+		"mouse1",
 		"mouse1",
 	},
 	arg2 = {
 		"mouse1",
+		keyCM,
 	},
 	arg3 = {
 		keyQuick,
+		nil,
 	},
 	arg4 = {
 		"mouse1",
+		keyRe,
 	},
 	arg5 = {
 		"mouse1",
+		keyRo,
 	},
 	arg6 = {
 		"mouse1",
+		nil,
 	},
 }
 
@@ -96,18 +107,34 @@ end
 function PrePress(arg)
 	local switchCases = {}
 	switchCases[1] = function()
-		PressAndReleaseKey(keyFloor)
+		if shifting then
+			PressAndReleaseKey(keyTrap)
+		else
+			PressAndReleaseKey(keyFloor)
+		end
 	end
 	switchCases[2] = function()
+		if shifting then
+			return;
+		end
 		PressAndReleaseKey(keyRoof)
 	end
 	switchCases[4] = function()
+		if shifting then
+			return;
+		end
 		PressAndReleaseKey(keyWall)
 	end
 	switchCases[5] = function()
+		if shifting then
+			return;
+		end
 		PressAndReleaseKey(keySteps)
 	end
 	switchCases[6] = function()
+		if shifting then
+			return;
+		end
 		PressAndReleaseKey(keyEdit)
 		Sleep(15)
 		PressAndReleaseMouseButton(3)
@@ -126,7 +153,7 @@ function OnEvent(event, arg)
 		return
 	end
 	local pressed = "MOUSE_BUTTON_PRESSED" == event
-	shifting = IsModifierPressed("lctrl")
+	shifting = IsModifierPressed("lshift")
 	if pressed then
 		PrePress(arg)
 	end
