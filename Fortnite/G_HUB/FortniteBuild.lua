@@ -28,6 +28,8 @@ setting = {
 	},
 }
 
+shifting = false
+
 function IsNumber(value)
 	return nil ~= tonumber(value);
 end
@@ -46,8 +48,19 @@ function ManageFlg(pressed, key, conditionsShift)
 	if IsNumber(key) then
 		key = "_" .. key
 	end
-	if pressed ~= pk[key] then
-		pk[key] = pressed
+	local flg = nil
+	if pressed then
+		if conditionsShift == shifting then
+			flg = pressed
+		end
+	else
+		flg = pressed
+	end
+	if nil == flg then
+		return false
+	end
+	if flg ~= pk[key] then
+		pk[key] = flg
 		return true
 	else
 		return false
@@ -113,6 +126,7 @@ function OnEvent(event, arg)
 		return
 	end
 	local pressed = "MOUSE_BUTTON_PRESSED" == event
+	shifting = IsModifierPressed("lctrl")
 	if pressed then
 		PrePress(arg)
 	end
