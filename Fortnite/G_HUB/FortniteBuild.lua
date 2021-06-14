@@ -126,9 +126,9 @@ function PrePress(arg)
 		PressAndReleaseKey(keyWall)
 	end
 	switchCases[5] = function()
-		if shifting then
-			return;
-		end
+		--if shifting then
+		--	return;
+		--end
 		PressAndReleaseKey(keySteps)
 	end
 	switchCases[6] = function()
