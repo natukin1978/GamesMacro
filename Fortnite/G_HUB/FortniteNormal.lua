@@ -9,7 +9,7 @@ keyPin   = "p"
 
 setting = {
 	arg3 = {
-		keyQuick,
+		keySteps, -- keyQuick
 		nil,
 	},
 	arg4 = {
