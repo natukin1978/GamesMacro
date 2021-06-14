@@ -109,6 +109,7 @@ function PrePress(arg)
 	switchCases[1] = function()
 		if shifting then
 			PressAndReleaseKey(keyTrap)
+			Sleep(50) -- safety
 		else
 			PressAndReleaseKey(keyFloor)
 		end
