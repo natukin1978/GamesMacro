@@ -134,8 +134,8 @@ end
 shifting_ = false
 
 press_ = {}
-for key, btns in pairs(setting_) do
-	for i, btn in pairs(btns) do
+for _, btns in pairs(setting_) do
+	for _, btn in pairs(btns) do
 		SetPress(btn, false)
 	end
 end
