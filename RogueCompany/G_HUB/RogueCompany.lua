@@ -28,32 +28,13 @@ function GetSettingBtns(arg)
 	return setting[key]
 end
 
-function IsNumber(value)
-	return nil ~= tonumber(value)
+function IsPress(btn)
+	return press[btn]
 end
 
-function IsPressKey(btn)
-	if IsNumber(btn) then
-		btn = "_" .. btn
-	end
-	return pk[btn]
+function SetPress(btn, value)
+	press[btn] = value
 end
-
-function SetPressKey(btn, value)
-	if IsNumber(btn) then
-		btn = "_" .. btn
-	end
-	pk[btn] = value
-end
-
-pk = {}
-for key, btns in pairs(setting) do
-	for i, btn in pairs(btns) do
-		SetPressKey(btn, false)
-	end
-end
-
-shifting = false
 
 function IsMouseButtonReleaseOrSleep(arg, time)
 	local min = 25
@@ -80,8 +61,8 @@ function ManageFlg(pressed, key, conditionsShift)
 	if nil == flg then
 		return false
 	end
-	if flg ~= IsPressKey(key) then
-		SetPressKey(key, flg)
+	if flg ~= IsPress(key) then
+		SetPress(key, flg)
 		return true
 	else
 		return false
@@ -91,7 +72,7 @@ end
 function PressReleaseMouseButtonByFlg(button)
 	local noStr = string.gsub(button, "mouse", "")
 	local no = tonumber(noStr)
-	if IsPressKey(button) then
+	if IsPress(button) then
 		OutputLogMessage("PressMouseButton: "..no.."\n")
 		PressMouseButton(no)
 	else
@@ -101,7 +82,7 @@ function PressReleaseMouseButtonByFlg(button)
 end
 
 function PressReleaseKeyByFlg(key)
-	if IsPressKey(key) then
+	if IsPress(key) then
 		OutputLogMessage("PressKey: "..key.."\n")
 		PressKey(key)
 	else
@@ -112,7 +93,7 @@ end
 
 -- TODO.This function is It's not working properly.
 function RapidFireKeyByFlg(arg, key, time)
-	if not IsPressKey(key) then
+	if not IsPress(key) then
 		return
 	end
 	repeat
@@ -147,5 +128,14 @@ function OnEvent(event, arg)
 			PressReleaseMouseButtonByFlg(btn)
 		end
 		::continue::
+	end
+end
+
+shifting = false
+
+press = {}
+for key, btns in pairs(setting) do
+	for i, btn in pairs(btns) do
+		SetPress(btn, false)
 	end
 end
