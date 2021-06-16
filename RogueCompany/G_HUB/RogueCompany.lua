@@ -1,6 +1,6 @@
 EnablePrimaryMouseButtonEvents(true)
 
-setting = {
+setting_ = {
 	arg1 = {
 		"mouse1",
 		"q",
@@ -25,15 +25,15 @@ setting = {
 
 function GetSettingBtns(arg)
 	local key = "arg" .. arg
-	return setting[key]
+	return setting_[key]
 end
 
 function IsPress(btn)
-	return press[btn]
+	return press_[btn]
 end
 
 function SetPress(btn, value)
-	press[btn] = value
+	press_[btn] = value
 end
 
 function IsMouseButtonReleaseOrSleep(arg, time)
@@ -52,7 +52,7 @@ end
 function ManageFlg(pressed, key, conditionsShift)
 	local flg = nil
 	if pressed then
-		if conditionsShift == shifting then
+		if conditionsShift == shifting_ then
 			flg = pressed
 		end
 	else
@@ -109,7 +109,7 @@ function OnEvent(event, arg)
 	end
 	local pressed = "MOUSE_BUTTON_PRESSED" == event
 	if 4 == arg then
-		shifting = pressed
+		shifting_ = pressed
 	end
 	local btns = GetSettingBtns(arg)
 	if not btns then
@@ -131,10 +131,10 @@ function OnEvent(event, arg)
 	end
 end
 
-shifting = false
+shifting_ = false
 
-press = {}
-for key, btns in pairs(setting) do
+press_ = {}
+for key, btns in pairs(setting_) do
 	for i, btn in pairs(btns) do
 		SetPress(btn, false)
 	end
