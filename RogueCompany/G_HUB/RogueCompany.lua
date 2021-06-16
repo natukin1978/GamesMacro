@@ -23,7 +23,16 @@ setting = {
 	},
 }
 
-shifting = false
+function GetSettingBtns(arg)
+	for key, btns in pairs(setting) do
+		local no_str = string.gsub(key, "arg", "")
+		local no = tonumber(no_str)
+		if no == arg then
+			return btns
+		end
+	end
+	return nil
+end
 
 function IsNumber(value)
 	return nil ~= tonumber(value)
@@ -49,6 +58,8 @@ for key, btns in pairs(setting) do
 		SetPressKey(btn, false)
 	end
 end
+
+shifting = false
 
 function IsMouseButtonReleaseOrSleep(arg, time)
 	local min = 25
@@ -125,25 +136,21 @@ function OnEvent(event, arg)
 	if 4 == arg then
 		shifting = pressed
 	end
-	for key, btns in pairs(setting) do
-		local no_str = string.gsub(key, "arg", "")
-		local no = tonumber(no_str)
-		if no ~= arg then
+	local btns = GetSettingBtns(arg)
+	if nil == btns then
+		return
+	end
+	for i, btn in pairs(btns) do
+		if nil == btn then
 			goto continue
 		end
-		for i, btn in pairs(btns) do
-			if nil == btn then
-				goto continue
-			end
-			if not ManageFlg(pressed, btn, 1 ~= i) then
-				goto continue
-			end
-			if nil == string.match(btn, "mouse") then
-				PressReleaseKeyByFlg(btn)
-			else
-				PressReleaseMouseButtonByFlg(btn)
-			end
-			::continue::
+		if not ManageFlg(pressed, btn, 1 ~= i) then
+			goto continue
+		end
+		if nil == string.match(btn, "mouse") then
+			PressReleaseKeyByFlg(btn)
+		else
+			PressReleaseMouseButtonByFlg(btn)
 		end
 		::continue::
 	end
