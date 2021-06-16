@@ -1,9 +1,5 @@
 EnablePrimaryMouseButtonEvents(true)
 
-function IsNumber(value)
-	return nil ~= tonumber(value);
-end
-
 setting = {
 	arg1 = {
 		"mouse1",
@@ -29,13 +25,28 @@ setting = {
 
 shifting = false
 
+function IsNumber(value)
+	return nil ~= tonumber(value)
+end
+
+function IsPressKey(btn)
+	if IsNumber(btn) then
+		btn = "_" .. btn
+	end
+	return pk[btn]
+end
+
+function SetPressKey(btn, value)
+	if IsNumber(btn) then
+		btn = "_" .. btn
+	end
+	pk[btn] = value
+end
+
 pk = {}
 for key, btns in pairs(setting) do
 	for i, btn in pairs(btns) do
-		if IsNumber(btn) then
-			btn = "_" .. btn
-		end
-		pk[btn] = false
+		SetPressKey(btn, false)
 	end
 end
 
@@ -53,9 +64,6 @@ function IsMouseButtonReleaseOrSleep(arg, time)
 end
 
 function ManageFlg(pressed, key, conditionsShift)
-	if IsNumber(key) then
-		key = "_" .. key
-	end
 	local flg = nil
 	if pressed then
 		if conditionsShift == shifting then
@@ -67,8 +75,8 @@ function ManageFlg(pressed, key, conditionsShift)
 	if nil == flg then
 		return false
 	end
-	if flg ~= pk[key] then
-		pk[key] = flg
+	if flg ~= IsPressKey(key) then
+		SetPressKey(key, flg)
 		return true
 	else
 		return false
@@ -78,7 +86,7 @@ end
 function PressReleaseMouseButtonByFlg(button)
 	local noStr = string.gsub(button, "mouse", "")
 	local no = tonumber(noStr)
-	if pk[button] then
+	if IsPressKey(button) then
 		OutputLogMessage("PressMouseButton: "..no.."\n")
 		PressMouseButton(no)
 	else
@@ -88,31 +96,23 @@ function PressReleaseMouseButtonByFlg(button)
 end
 
 function PressReleaseKeyByFlg(key)
-	local ch = key
-	if IsNumber(key) then
-		key = "_" .. key
-	end
-	if pk[key] then
-		OutputLogMessage("PressKey: "..ch.."\n")
-		PressKey(ch)
+	if IsPressKey(key) then
+		OutputLogMessage("PressKey: "..key.."\n")
+		PressKey(key)
 	else
-		OutputLogMessage("ReleaseKey: "..ch.."\n")
-		ReleaseKey(ch)
+		OutputLogMessage("ReleaseKey: "..key.."\n")
+		ReleaseKey(key)
 	end
 end
 
 -- TODO.This function is It's not working properly.
 function RapidFireKeyByFlg(arg, key, time)
-	local ch = key
-	if IsNumber(key) then
-		key = "_" .. key
-	end
-	if not pk[key] then
+	if not IsPressKey(key) then
 		return
 	end
 	repeat
-		OutputLogMessage("PressAndReleaseKey: "..ch.."\n")
-		PressAndReleaseKey(ch)
+		OutputLogMessage("PressAndReleaseKey: "..key.."\n")
+		PressAndReleaseKey(key)
 	until IsMouseButtonReleaseOrSleep(arg, time)
 end
 
