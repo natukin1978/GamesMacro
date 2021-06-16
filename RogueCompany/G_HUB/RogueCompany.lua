@@ -24,14 +24,8 @@ setting = {
 }
 
 function GetSettingBtns(arg)
-	for key, btns in pairs(setting) do
-		local no_str = string.gsub(key, "arg", "")
-		local no = tonumber(no_str)
-		if no == arg then
-			return btns
-		end
-	end
-	return nil
+	local key = "arg" .. arg
+	return setting[key]
 end
 
 function IsNumber(value)
@@ -137,7 +131,7 @@ function OnEvent(event, arg)
 		shifting = pressed
 	end
 	local btns = GetSettingBtns(arg)
-	if nil == btns then
+	if not btns then
 		return
 	end
 	for i, btn in pairs(btns) do
