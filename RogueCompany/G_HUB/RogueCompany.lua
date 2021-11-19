@@ -1,22 +1,27 @@
 EnablePrimaryMouseButtonEvents(true)
 
 setting_ = {
+	-- left
 	arg1 = {
 		"mouse1",
 		"q",
 	},
+	-- right
 	arg2 = {
 		"mouse3",
 		"v",
 	},
+	-- middle
 	arg3 = {
 		"p",
 		"4",
 	},
+	-- left top
 	arg5 = {
 		"lctrl",
 		"g",
 	},
+	-- dpi
 	arg6 = {
 		"m",
 		"tab",
