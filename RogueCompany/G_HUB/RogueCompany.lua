@@ -1,42 +1,44 @@
 EnablePrimaryMouseButtonEvents(true)
 
-function IsNumber(value)
-	return nil ~= tonumber(value);
-end
-
-setting = {
+setting_ = {
+	-- left
 	arg1 = {
 		"mouse1",
 		"q",
 	},
+	-- right
 	arg2 = {
 		"mouse3",
 		"v",
 	},
+	-- middle
 	arg3 = {
 		"p",
 		"4",
 	},
+	-- left top
 	arg5 = {
 		"lctrl",
 		"g",
 	},
+	-- dpi
 	arg6 = {
 		"m",
 		"tab",
 	},
 }
 
-shifting = false
+function GetSettingBtns(arg)
+	local key = "arg" .. arg
+	return setting_[key]
+end
 
-pk = {}
-for key, btns in pairs(setting) do
-	for i, btn in pairs(btns) do
-		if IsNumber(btn) then
-			btn = "_" .. btn
-		end
-		pk[btn] = false
-	end
+function IsPress(btn)
+	return press_[btn]
+end
+
+function SetPress(btn, value)
+	press_[btn] = value
 end
 
 function IsMouseButtonReleaseOrSleep(arg, time)
@@ -53,12 +55,9 @@ function IsMouseButtonReleaseOrSleep(arg, time)
 end
 
 function ManageFlg(pressed, key, conditionsShift)
-	if IsNumber(key) then
-		key = "_" .. key
-	end
 	local flg = nil
 	if pressed then
-		if conditionsShift == shifting then
+		if conditionsShift == shifting_ then
 			flg = pressed
 		end
 	else
@@ -67,8 +66,8 @@ function ManageFlg(pressed, key, conditionsShift)
 	if nil == flg then
 		return false
 	end
-	if flg ~= pk[key] then
-		pk[key] = flg
+	if flg ~= IsPress(key) then
+		SetPress(key, flg)
 		return true
 	else
 		return false
@@ -78,7 +77,7 @@ end
 function PressReleaseMouseButtonByFlg(button)
 	local noStr = string.gsub(button, "mouse", "")
 	local no = tonumber(noStr)
-	if pk[button] then
+	if IsPress(button) then
 		OutputLogMessage("PressMouseButton: "..no.."\n")
 		PressMouseButton(no)
 	else
@@ -88,31 +87,23 @@ function PressReleaseMouseButtonByFlg(button)
 end
 
 function PressReleaseKeyByFlg(key)
-	local ch = key
-	if IsNumber(key) then
-		key = "_" .. key
-	end
-	if pk[key] then
-		OutputLogMessage("PressKey: "..ch.."\n")
-		PressKey(ch)
+	if IsPress(key) then
+		OutputLogMessage("PressKey: "..key.."\n")
+		PressKey(key)
 	else
-		OutputLogMessage("ReleaseKey: "..ch.."\n")
-		ReleaseKey(ch)
+		OutputLogMessage("ReleaseKey: "..key.."\n")
+		ReleaseKey(key)
 	end
 end
 
 -- TODO.This function is It's not working properly.
 function RapidFireKeyByFlg(arg, key, time)
-	local ch = key
-	if IsNumber(key) then
-		key = "_" .. key
-	end
-	if not pk[key] then
+	if not IsPress(key) then
 		return
 	end
 	repeat
-		OutputLogMessage("PressAndReleaseKey: "..ch.."\n")
-		PressAndReleaseKey(ch)
+		OutputLogMessage("PressAndReleaseKey: "..key.."\n")
+		PressAndReleaseKey(key)
 	until IsMouseButtonReleaseOrSleep(arg, time)
 end
 
@@ -123,28 +114,33 @@ function OnEvent(event, arg)
 	end
 	local pressed = "MOUSE_BUTTON_PRESSED" == event
 	if 4 == arg then
-		shifting = pressed
+		shifting_ = pressed
 	end
-	for key, btns in pairs(setting) do
-		local no_str = string.gsub(key, "arg", "")
-		local no = tonumber(no_str)
-		if no ~= arg then
+	local btns = GetSettingBtns(arg)
+	if not btns then
+		return
+	end
+	for i, btn in pairs(btns) do
+		if nil == btn then
 			goto continue
 		end
-		for i, btn in pairs(btns) do
-			if nil == btn then
-				goto continue
-			end
-			if not ManageFlg(pressed, btn, 1 ~= i) then
-				goto continue
-			end
-			if nil == string.match(btn, "mouse") then
-				PressReleaseKeyByFlg(btn)
-			else
-				PressReleaseMouseButtonByFlg(btn)
-			end
-			::continue::
+		if not ManageFlg(pressed, btn, 1 ~= i) then
+			goto continue
+		end
+		if nil == string.match(btn, "mouse") then
+			PressReleaseKeyByFlg(btn)
+		else
+			PressReleaseMouseButtonByFlg(btn)
 		end
 		::continue::
+	end
+end
+
+shifting_ = false
+
+press_ = {}
+for _, btns in pairs(setting_) do
+	for _, btn in pairs(btns) do
+		SetPress(btn, false)
 	end
 end
